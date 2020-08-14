@@ -1,0 +1,244 @@
+<!--<table>
+        <thead>
+            <th>Usuario Creador</th>
+            <th>Fecha </th>
+            <th>Temperatura</th>
+            <th>Birras</th>
+        </thead>
+        <tbody *ngFor="let mi of meets">
+            <tr>
+                <td> {{mi.idUsuarioCreador}}</td>
+                <td> {{mi.fechaReunion}}</td>
+                <td> {{mi.temperatura}}</td>
+                <td> {{mi.birras}}</td>
+            </tr>
+        </tbody>
+
+</table>-->
+
+<!--ATTENDANCE TABLE-->
+<h2 style="margin-left:85px">Mis invitaciones</h2>
+<table mat-table [dataSource]="attendances" class="mat-elevation-z8" class="styleTable">
+    <ng-container matColumnDef="IdReunion">
+        <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+        <td mat-cell *matCellDef="let at"> {{at.idReunion}} </td>
+    </ng-container>
+    <ng-container matColumnDef="DescripcionUsuarioCreador">
+        <th  mat-header-cell *matHeaderCellDef>Usuario Creador</th>
+        <td mat-cell *matCellDef="let at"> {{at.descripcionUsuarioCreador}} </td>
+    </ng-container>
+    <ng-container matColumnDef="FechaReunion">
+        <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+        <td mat-cell *matCellDef="let at"> {{at.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Temperatura">
+        <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+        <td mat-cell *matCellDef="let at"> {{at.temperatura}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acept">
+        <th mat-header-cell *matHeaderCellDef>
+            Aceptar
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="acept(element, askacept)">
+                <mat-icon class="green-icon" aria-label="Aceptar">check_circle</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="decline">
+        <th mat-header-cell *matHeaderCellDef>
+            Declinar
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="decline(element, askDecline)">
+                <mat-icon class="red-icon" aria-label="Declinar">cancel</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[7, 15]" showFirstLastButtons class="styleTable" ></mat-paginator>
+
+
+<!--ASKACEPT MODAL-->
+<ng-template #askacept let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Invitar a la reunion</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">¿Seguro desea confirmar la asistencia?</label>
+            
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="confirmDecision(modalconifrmac, 'Aceptada')">SI</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close()">NO</button>
+    </div>
+</ng-template>
+
+<!--CONFIRMATION ACEPT MODAL-->
+<ng-template #modalconifrmac let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Operacion Exitosa</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success" role="alert" id="confirmAlert" name="confirmAlert">
+            Ha informado que asistirá a la reunion. Puede visualizarla en "Ver Reuniones Aceptadas".
+            Puede confirmar que asistió a la reunion en la solapa CHECK OUT del Menu.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--ASKDECLINE MODAL-->
+<ng-template #askDecline let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Declinar invitracion</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">¿Seguro desea declinar la asistencia?</label>
+            
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="confirmDecision(modalconfirmdec,'Declinada')">SI</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close()">NO</button>
+    </div>
+</ng-template>
+
+<!--CONFIRMATION DECLINE MODAL-->
+<ng-template #modalconfirmdec let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Operacion Exitosa</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success" role="alert" id="confirmAlert" name="confirmAlert">
+            Se ha declinado la invitacion a la reunion. Puede ver sus reuniones declinadas en "Ver reuniones declinadas". 
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+
+<!--MODAL VER CONFIRMADA-->
+<ng-template #modaltableAcepteds let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Mis proximas reuniones</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table mat-table [dataSource]="attAcepted" class="mat-elevation-z8" style="width: 100%;">
+            <ng-container matColumnDef="IdReunion">
+                <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.idReunion}} </td>
+            </ng-container>
+            <ng-container matColumnDef="DescripcionUsuarioCreador">
+                <th  mat-header-cell *matHeaderCellDef>Usuario Creador</th>
+                <td mat-cell *matCellDef="let at"> {{at.descripcionUsuarioCreador}} </td>
+            </ng-container>
+            <ng-container matColumnDef="FechaReunion">
+                <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Temperatura">
+                <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+                <td mat-cell *matCellDef="let at"> {{at.temperatura}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>
+                    Estado
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button>
+                        <mat-icon class="green-icon" aria-label="Aceptar">check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedTableAceptOrDeclColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTableAceptOrDeclColumns;"></tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--MODAL VER DECLINADAS-->
+<ng-template #modaltableDecl let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Reuniones Declinadas</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table mat-table [dataSource]="attAcepted" class="mat-elevation-z8" style="width: 100%;">
+            <ng-container matColumnDef="IdReunion">
+                <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.idReunion}} </td>
+            </ng-container>
+            <ng-container matColumnDef="DescripcionUsuarioCreador">
+                <th  mat-header-cell *matHeaderCellDef>Usuario Creador</th>
+                <td mat-cell *matCellDef="let at"> {{at.descripcionUsuarioCreador}} </td>
+            </ng-container>
+            <ng-container matColumnDef="FechaReunion">
+                <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Temperatura">
+                <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+                <td mat-cell *matCellDef="let at"> {{at.temperatura}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>
+                    Estado
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button>
+                        <mat-icon class="red-icon" aria-label="Aceptar">close</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedTableAceptOrDeclColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTableAceptOrDeclColumns;"></tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+
+
+<!--BOTONERA-->
+<div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="getAcepteds(modaltableAcepteds)" >Ver reuniones aceptadas</button>
+    <button type="button" class="btn btn-danger" (click)="getDeclined(modaltableDecl)">Ver reuniones declinadas</button>
+</div>

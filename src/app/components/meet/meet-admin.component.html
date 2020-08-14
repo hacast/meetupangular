@@ -1,0 +1,202 @@
+<!--MEETS TABLE-->
+<h2 style="margin-left:85px">Crear/Adminstrar mis reuniones</h2>
+<table mat-table [dataSource]="meets" class="mat-elevation-z8" class="styleTable">
+    <ng-container matColumnDef="Id">
+        <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+        <td mat-cell *matCellDef="let mi"> {{mi.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="FechaReunion">
+        <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+        <td mat-cell *matCellDef="let mi"> {{mi.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Temperatura">
+        <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+        <td mat-cell *matCellDef="let mi"> {{mi.temperatura}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Birras">
+        <th  mat-header-cell *matHeaderCellDef>Birras</th>
+        <td mat-cell *matCellDef="let mi"> {{mi.birras}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="invite">
+        <th mat-header-cell *matHeaderCellDef>
+            Invitar
+        </th>
+        <td mat-cell *matCellDef="let element" style="text-align: left;">
+            <button mat-icon-button (click)="invite(element, contenido, modalnousersleft)" >
+                <mat-icon class="blue-icon" aria-label="Invite">add_alarm</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="viewaccepted">
+        <th mat-header-cell *matHeaderCellDef>
+            Ver Confirmados
+        </th>
+        <td mat-cell *matCellDef="let element" style="text-align: left;">
+            <button mat-icon-button (click)="viewAccepted(element, modaltableaccepted)" >
+                <mat-icon class="blue-icon" aria-label="Invite">playlist_add_check</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[7, 15]" showFirstLastButtons class="styleTable" ></mat-paginator>
+
+
+<!--INVITE MODAL-->
+<ng-template #contenido let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Invitar a la reunion</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Elija un usuario</label>
+            <select [(ngModel)]="idUsuario" id="idUsuario" class="form-control" name="idUsuario">
+                <option *ngFor="let u of userList" [value]="u.idUsuario">
+                    {{u.nombre}}
+                </option>
+            </select>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="inviteUser(confirmationInvite)">Enviar invitacion</button>
+    </div>
+</ng-template>
+
+<!--ADD MEET MODAL-->
+<ng-template #addmeetmodal let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Nueva reunion</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Seleccione una fecha</label>
+            <input [(ngModel)]="fechaNuevaReunion" name="fechaNuevaReunion" id="fechaNuevaReunion" type="datetime-local" class="form-control">
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="confirmMeet(confirmationMeet, modalincorrectdate)">Crear</button>
+    </div>
+</ng-template>
+
+<!--CONFIRMATION-->
+<ng-template #confirmationInvite let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Operacion Exitosa</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success" role="alert" id="confirmAlert" name="confirmAlert">
+            Se ha enviado la invitacion al usuario seleccionado.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--CONFIRMATION MEET-->
+<ng-template #confirmationMeet let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Operacion Exitosa</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-success" role="alert" id="confirmAlert" name="confirmAlert">
+            Se ha creado la reunion.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--SIN USUARIOS-->
+<ng-template #modalnousersleft let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Atencion!</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger" role="alert" id="confirmAlert" name="confirmAlert">
+            No quedan usuarios por invitar.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+
+<!--FECHA INVALIDA-->
+<ng-template #modalincorrectdate let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Atencion!</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger" role="alert" id="confirmAlert" name="confirmAlert">
+            Debe seleccionar una fecha valida.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+
+<!--MODAL VER CONFIRMACION DE ASISTENCIA-->
+<ng-template #modaltableaccepted let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Asistencias confirmadas</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table mat-table [dataSource]="usersAcepted" class="mat-elevation-z8" style="width: 100%;">
+            <ng-container matColumnDef="DescripcionIdUsuario">
+                <th  mat-header-cell *matHeaderCellDef>Usuario</th>
+                <td mat-cell *matCellDef="let at"> {{at.descripcionIdUsuario}} </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>
+                    Estado
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button>
+                        <mat-icon class="blue-icon" aria-label="Aceptar">check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedTableAceptedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTableAceptedColumns;"></tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--BOTONERA-->
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="addMeet(addmeetmodal)">Crear una nueva reunion</button>
+    <!--<button type="button" class="btn btn-danger" (click)="inviteUser(contenido)">Ver reuniones canceladas</button>-->
+</div>

@@ -1,0 +1,56 @@
+<!--<form [formGroup]="formLogin" (ngSubmit)="Login()">
+    <div>
+        <label>Usuario</label>
+        <input type="text" formControlName="usuario">
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" formControlName="password">
+    </div>
+    <div>
+        <button [disabled]="!formLogin.valid" type="submit">
+            Ingresar
+        </button>
+    </div>
+
+</form>-->
+
+
+<div class="container">
+	<h1 class="text-center">BIRRAS</h1>
+	<form [formGroup]="formLogin" (ngSubmit)="Login(errorModal)">
+		<label>
+			<span class="label-text">Usuario</span>
+			<input type="text" formControlName="usuario">
+		</label>
+		<label class="password">
+			<span class="label-text">Password</span>
+			<button class="toggle-visibility" title="toggle password visibility" tabindex="-1">
+				<span class="glyphicon glyphicon-eye-close"></span>
+			</button>
+			<input type="password" formControlName="password">
+		</label>
+		<div class="text-center" style="margin-top:10px">
+			<button class="submit" [disabled]="!formLogin.valid" type="submit">INGRESAR</button>
+		</div>
+	</form>
+</div>
+
+
+<!--ERROR-->
+<ng-template #errorModal let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Alerta!</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger" role="alert" id="confirmAlert" name="confirmAlert">
+            Usuario y/o password invalidos.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>

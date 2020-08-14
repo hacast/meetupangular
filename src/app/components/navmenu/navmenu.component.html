@@ -1,0 +1,30 @@
+<aside class="sidebar">
+    <nav>
+        <ul class="sidebar__nav">
+            <li>
+                <a [routerLink]="['/meetAdmin']" class="sidebar__nav__link">
+                    <i class="fas fa-plus"></i>
+                    <span class="sidebar__nav__text">Nueva Reunion</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/home']" class="sidebar__nav__link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="sidebar__nav__text">Mi Agenda</span>
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/meetCheckout']" class="sidebar__nav__link">
+                    <i class="far fa-calendar-check"></i>
+                    <span class="sidebar__nav__text">Check Out</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar__nav__link" (click)="LogOut()" style="cursor:pointer">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sidebar__nav__text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>

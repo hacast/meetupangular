@@ -1,0 +1,126 @@
+<!--ATTENDANCE TABLE-->
+<h2 style="margin-left:85px">Check Out</h2>
+<table mat-table [dataSource]="attendances" class="mat-elevation-z8" class="styleTable">
+    <ng-container matColumnDef="IdReunion">
+        <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+        <td mat-cell *matCellDef="let at"> {{at.idReunion}} </td>
+    </ng-container>
+    <ng-container matColumnDef="DescripcionUsuarioCreador">
+        <th  mat-header-cell *matHeaderCellDef>Usuario Creador</th>
+        <td mat-cell *matCellDef="let at"> {{at.descripcionUsuarioCreador}} </td>
+    </ng-container>
+    <ng-container matColumnDef="FechaReunion">
+        <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+        <td mat-cell *matCellDef="let at"> {{at.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Temperatura">
+        <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+        <td mat-cell *matCellDef="let at"> {{at.temperatura}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="checkout">
+        <th mat-header-cell *matHeaderCellDef>
+            Check Out
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="checkout(element, checkmodal)">
+                <mat-icon class="gold-icon" aria-label="Aceptar">date_range</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[7, 15]" showFirstLastButtons class="styleTable" ></mat-paginator>
+
+<!--CheckOUT MODAL-->
+<ng-template #checkmodal let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Check Out</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">¿Seguro desea confirmar el check out de la reunion?</label>
+            
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="confirmCheckOut(modalconfirm)">SI</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close()">NO</button>
+    </div>
+</ng-template>
+
+<!--CONFIRMATION ACEPT-->
+<ng-template #modalconfirm let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Operacion Exitosa</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-warning" role="alert" id="confirmAlert" name="confirmAlert">
+            Se ha confirmado su asistencia a la reunion.
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+
+<!--MODAL VER CheckOuts-->
+<ng-template #modaltablecheckouts let-modal runat="server">
+    <div class="modal-header">
+        <h4 class="modal-title">Reuniones con checkout</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table mat-table [dataSource]="attChck" class="mat-elevation-z8" style="width: 100%;">
+            <ng-container matColumnDef="IdReunion">
+                <th  mat-header-cell *matHeaderCellDef>ID de la reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.idReunion}} </td>
+            </ng-container>
+            <ng-container matColumnDef="DescripcionUsuarioCreador">
+                <th  mat-header-cell *matHeaderCellDef>Usuario Creador</th>
+                <td mat-cell *matCellDef="let at"> {{at.descripcionUsuarioCreador}} </td>
+            </ng-container>
+            <ng-container matColumnDef="FechaReunion">
+                <th  mat-header-cell *matHeaderCellDef>Fecha Reunion</th>
+                <td mat-cell *matCellDef="let at"> {{at.fechaReunion | date:'dd/MM/yyyy hh:MM:ss'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Temperatura">
+                <th  mat-header-cell *matHeaderCellDef>Temperatura</th>
+                <td mat-cell *matCellDef="let at"> {{at.temperatura}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>
+                    Estado
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button>
+                        <mat-icon class="gold-icon" aria-label="Aceptar">how_to_reg</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedTableAceptedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedTableAceptedColumns;"></tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close()">OK</button>
+    </div>
+</ng-template>
+
+<!--BOTONERA-->
+<div class="modal-footer">
+    <button type="button" class="btn btn-warning" (click)="getcheckOuts(modaltablecheckouts)">Ver Check Outs</button>
+</div>
